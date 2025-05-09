@@ -43,3 +43,47 @@ export async function register(userData) {
     throw new Error(error.message || 'Network error');
   }
 }
+
+export async function requestReset(email) {
+  const response = await fetch(`${API_URL}/request-reset`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) throw new Error((await response.json()).message);
+  return response.json();
+}
+
+export async function resetPassword(token, newEmail, newPassword) {
+  const response = await fetch(`${API_URL}/reset-password/${token}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newEmail, newPassword }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Reset failed');
+  }
+
+  return response.json();
+
+
+  
+// @ts-ignore
+}
+//  catch (error) {
+//   throw new Error(error.message || 'Network error');
+// }
+export async function verifyToken(token) {
+  const response = await fetch(`${API_URL}/verify-token`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) throw new Error('Invalid token');
+  return response.json();
+}
+
+

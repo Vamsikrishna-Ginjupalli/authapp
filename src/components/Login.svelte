@@ -1,6 +1,10 @@
 <script>
   import { navigate } from "../lib/router.js";
   import { login } from "../lib/api.js";
+  import { isAuthenticated } from '../stores.js';
+
+  isAuthenticated.set(true);
+
   
   export let imageUrl = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg";
   
@@ -23,7 +27,6 @@
       // Store token and user data
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
-      
       navigate("/dashboard");
     } catch (err) {
       error = err.message;
@@ -38,6 +41,10 @@
 
   function goToReset() {
     navigate("/reset");
+  }
+
+  function goToAbout() {
+    navigate("/about");
   }
 </script>
 
@@ -73,6 +80,7 @@
       <div class="links">
         <a href="/reset" on:click|preventDefault={goToReset}>Forgot Password?</a>
         <a href="/register" on:click|preventDefault={goToRegister}>Register</a>
+        <a href="/about" on:click|preventDefault={goToAbout}>About</a>
       </div>
 
       <button on:click={handleLogin} disabled={loading}>

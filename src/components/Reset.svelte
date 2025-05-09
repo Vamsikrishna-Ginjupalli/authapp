@@ -1,14 +1,26 @@
 <script>
   import { navigate } from "../lib/router.js";
+  import { requestReset } from "../lib/api.js";
   
   export let imageUrl = "https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg";
   
   let email = '';
 
-  function handleReset() {
-    console.log('Reset password for:', email);
-    navigate("/");
+  async function handleReset() {
+    if (!email) {
+      return;
+    }
+    try {
+      const response = await requestReset(email);
+      console.log('Reset password for:', email);
+      navigate("/");
+    } catch(err) {
+      console.error("Reset error:", err);
+    }
   }
+
+    
+  
 
   function goToLogin() {
     navigate("/");

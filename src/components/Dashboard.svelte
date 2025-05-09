@@ -1,16 +1,41 @@
 <script>
   import { navigate } from "../lib/router.js";
+  import { onMount } from "svelte";
+  import { isAuthenticated } from '../stores.js';
+
+  isAuthenticated.set(false);
+
   
   let currentPage = 'page1';
   let showProfileMenu = false;
-  
-  const user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
+  let user = {
+    name: '',
+    email: '',
+    avatar: 'https://www.rossvideo.com/wp-content/uploads/2023/07/327229362_1020549246001373_3056391691975066024_n.jpg'
   };
 
+  onMount(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      user = {
+        name: `${storedUser.firstName} ${storedUser.lastName}`,
+        email: storedUser.email,
+        avatar: 'https://www.rossvideo.com/wp-content/uploads/2023/07/327229362_1020549246001373_3056391691975066024_n.jpg'
+      };
+    } else {
+      // If no user data found, redirect to login
+      navigate('/');
+    }
+  });
+  onMount(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/'); // redirect to login
+    }
+  });
+
   function handleLogout() {
+    localStorage.removeItem('token');
     navigate('/');
   }
 
